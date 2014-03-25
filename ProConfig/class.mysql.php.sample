@@ -1,0 +1,63 @@
+<?php
+class DB{
+  var $dbType   = "mysql";
+  var $dbServer = "localhost";
+  var $dbName   = "database_name";
+  var $dbUser   = "user";
+  var $dbPswd   = "password";
+  var $dbconn   = "";
+  
+  public function __construct(){
+    $this->dbConn();
+  }
+  
+  function dbConn() {
+    $this->dbconn = mysql_connect($this->dbServer, $this->dbUser, $this->dbPswd);
+    @mysql_select_db($this->dbName) or die("Unable to select database");
+  }
+
+  function dbSel() {
+    @mysql_select_db($this->dbName) or die("Unable to select database");
+  }
+
+  function dbQuery($sqlstr="") {
+    if (!$sqlstr) $sqlstr=$this->sqlstr;
+    mysql_query("SET NAMES 'utf8'"); 
+    $result = mysql_query($sqlstr);
+    return $result;
+  }
+
+  function dbFetchArray($rst) {
+    $array = mysql_fetch_array($rst);
+    return $array;
+  } 
+
+  function dbFetchRow($rst) {
+    $row = mysql_fetch_row($rst);
+    return $row;
+  }
+
+  function dbrownums($rst) {
+    $rownums = mysql_num_rows($rst);
+    return $rownums;
+  }
+
+  function dbClose() {
+    mysql_close($this->dbconn);
+  }
+
+  function mysql_insert_id() {
+    $id = "";
+    $rs = mysql_query("SELECT @@identity AS id");
+    if ($row = mysql_fetch_row($rs)) {
+      $id = trim($row[0]);
+    }
+    mysql_free_result($rs);
+    return $id;
+  } 
+  
+  function recNum($rst) {
+  	$num = mysql_num_rows($rst);
+  	return $num;
+  }
+}
